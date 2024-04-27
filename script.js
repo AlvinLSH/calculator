@@ -30,7 +30,6 @@ function operate(a, operator, b) {
 let firstOperand = null;
 let secondOperand = null;
 let firstOperator = null;
-let secondOpetor = null;
 let display = '0';
 let count = 0;
 let tempSecondOperand = null;
@@ -51,6 +50,9 @@ for(let i = 0; i < btn.length; i++) {
         }
         if(btn[i].classList.contains('operator')) {
             setOperator(btn[i].value);
+        }
+        if (btn[i].classList.contains('equal')) {
+            equalSign();
         }
     })
 }
@@ -86,8 +88,8 @@ function setOperator(operator) {
     } else if (secondOperand != null) {
         display = operate(firstOperand, firstOperator,secondOperand);
         console.log(display);
-        tempFirstOperator = firstOperator;
-        tempSecondOperand = secondOperand;
+        tempFirstOperator = null;
+        tempSecondOperand = null;
         secondOperand = null;
         firstOperator = operator;
         firstOperand = display;
@@ -96,4 +98,31 @@ function setOperator(operator) {
     } if (firstOperator != operator) {
         firstOperator = operator;
     }
+}
+
+function equalSign() {
+    if (firstOperand == null) {
+        if (tempFirstOperator && tempSecondOperand) {
+            firstOperand = displayValue.value;
+            display = operate(firstOperand, tempFirstOperator, tempSecondOperand);
+            firstOperand = null;
+            updateDisplay();
+            display = '0';
+        } else {
+            display = display;
+        }
+    } else if (firstOperand && firstOperator && !secondOperand) {
+        alert('Invalid format');
+    } else if(firstOperand && 
+                firstOperator && 
+                secondOperand) {
+        display = operate(firstOperand, firstOperator, secondOperand);
+        tempFirstOperator = firstOperator;
+        tempSecondOperand = secondOperand;
+        secondOperand = null;
+        firstOperand = null;
+        firstOperator = null;
+        updateDisplay();
+    }
+
 }
