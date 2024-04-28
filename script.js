@@ -7,11 +7,15 @@ function subtract(a, b) {
 }
 
 function multiply(a, b) {
-    return a * b;
+    return Math.round((a * b) * 100) / 100;
 }
 
 function divide(a, b) {
-    return a / b;
+    if (b == 0) {
+        return 'Math error';
+    } else {
+        return Math.round((a / b) * 100) / 100;
+    }
 }
 
 function operate(a, operator, b) {
@@ -36,30 +40,34 @@ let tempSecondOperand = null;
 let tempFirstOperator = null;
 
 
-const displayValue = document.querySelector('input');
+const displayValue = document.querySelector('.display');
 function updateDisplay() {
-    displayValue.value = display;
+    displayValue.textContent = display;
 }
 
 
 const btn = document.querySelectorAll('button');
 for(let i = 0; i < btn.length; i++) {
     btn[i].addEventListener('click', () => {
-        if(btn[i].classList.contains('operand')) {
+        if (btn[i].classList.contains('operand')) {
             setOperand(btn[i].value);
-        }
-        if(btn[i].classList.contains('operator')) {
+        } else if (btn[i].classList.contains('operator')) {
             setOperator(btn[i].value);
-        }
-        if (btn[i].classList.contains('equal')) {
+        } else if (btn[i].classList.contains('equal')) {
             equalSign();
+        } else if (btn[i].classList.contains('clear')) {
+            clear();
+        } else if(btn[i].classList.contains('decimal')) {
+            setDecimal();
+        } else if (btn[i].classList.contains('pos-neg')) {
+            setPositiveNegative();
         }
     })
 }
 
 function setOperand(operand) {
     if(firstOperand == null) {
-        if(display === '0') {
+        if(display === '0' || display === '-0') {
             display = operand;
         }
         else {
@@ -103,7 +111,7 @@ function setOperator(operator) {
 function equalSign() {
     if (firstOperand == null) {
         if (tempFirstOperator && tempSecondOperand) {
-            firstOperand = displayValue.value;
+            firstOperand = displayValue.textContent;
             display = operate(firstOperand, tempFirstOperator, tempSecondOperand);
             firstOperand = null;
             updateDisplay();
@@ -125,4 +133,55 @@ function equalSign() {
         updateDisplay();
     }
 
+}
+
+
+function clear() {
+    firstOperand = null;
+    secondOperand = null;
+    firstOperator = null;
+    tempFirstOperator = null;
+    tempSecondOperand = null;
+    display = '0';
+    count = 0;
+    updateDisplay();
+}
+
+function setDecimal() {
+    if (!firstOperand && !display.includes('.')) {
+        display += '.';
+        updateDisplay();
+    } 
+    else if (firstOperand && firstOperator) {
+        if(!secondOperand) {
+            display = '0';
+            display += '.'
+            updateDisplay();
+            secondOperand = display;
+        } else {
+            if (!display.includes('.')) {
+                display += '.';
+                updateDisplay()
+                secondOperand = display;
+            }
+        }
+    }
+}
+
+function setPositiveNegative() {
+    if (!firstOperand || secondOperand) {
+        if (!display.includes('-')) {
+            display = '-' + display;
+        } else {
+            display = display.substring(1);
+        }
+    } else if (firstOperand && firstOperator && !secondOperand) {
+        if (!display.includes('-')) {
+            display = '-' + display;
+        } else {
+            display = display.substring(1);
+        }
+        firstOperand = display;
+    }
+    updateDisplay();
 }
