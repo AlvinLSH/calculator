@@ -131,6 +131,7 @@ function equalSign() {
         firstOperand = null;
         firstOperator = null;
         updateDisplay();
+        display = '0';
     }
 
 }
